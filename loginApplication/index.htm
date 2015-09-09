@@ -1,0 +1,46 @@
+<html>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type = "text/javascript" >
+    history.pushState(null, null, 'index.htm');
+    window.addEventListener('popstate', function(event) {
+    history.pushState(null, null, 'index.htm');
+    });
+
+    function verify() {
+	    var username = $('input[name="username"]').val();
+	    var password = $('input[name="password"]').val();
+	    if(username=="" || password=="")
+	    	$('#authMess').html("Please fill in both the fields");
+	    else {
+		    $.get("/index_post", {username:username,password:password}, function(resp){
+		    	
+		    	if(resp['rows'] == "" ||resp['rows']==null) {
+		    		$('#authMess').html("Invalid username/password");   		
+		    	}
+		    	else if(resp['rows'][0].type == "customer"){
+		    		window.location.href= "/customer_survey?username="+resp['rows'][0].username;
+		    	}
+		    	else if(resp['rows'][0].type == "admin"){
+		    		window.location.href= "/admin_dashboard?username="+resp['rows'][0].username;
+		    	}
+		    });
+		}
+	  	//document.getElementById('authMess').innerHTML(mess)   
+  	}
+</script>
+<body>
+<form action="index_post" method="GET">
+<div align="center" id="myinnercontainer">
+		<div> Username: <input type="text" name="username"/> </div><p/>
+		<div> Password: <input type="password" type="text" name="password"/> </div>
+		<div style="color:red" id="authMess"></div> <p/>
+		<div> <input align="center" type="button" value="Submit" onclick="verify()" /> </div>
+</div>
+</form>
+</body>
+<style type="text/css">
+	#myoutercontainer { /*position:relative*/ }
+	#myoutercontainer2 { line-height:4em }
+	#myinnercontainer { position:absolute; top:50%; height:10em; margin-top:-5em }
+</style>
+</html>

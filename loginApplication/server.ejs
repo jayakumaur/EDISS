@@ -1,0 +1,189 @@
+var express = require('express');
+var bodyParser = require('body-parser');
+var mysql      = require('mysql');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+var flash = require('connect-flash');
+var app = express();
+
+// app.use(cookieParser('secret'));
+// app.use(session({cookie: { maxAge: 60000 }}));
+// app.use(flash());
+
+//establishing connection with mysql
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password	: 'sairam',
+  database : 'ediss'
+});
+connection.connect(function(err, conn) {
+    if(err) {
+         console.log('MySQL connection error: ', err);
+         process.exit(1);
+    }
+
+});
+
+var count, username;
+var userid;
+var userSurveyResult1, userSurveyResult2, userSurveyResult3;
+var authData = "";
+
+// Create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+
+app.get('/index.htm', function (req, res) {
+   res.sendFile( __dirname + "/" + "index.htm",{authData:authData});
+})
+
+//survey.ejs - page to be redirected if customer
+app.get('/customer_survey', function (req, res) {
+	var user = req.query.username;
+   res.render( __dirname + "/" + "customer_survey.ejs",{username:username});
+})
+
+//admin_dashboard.ejs - page to be redirected to if its the admin
+app.get('/admin_dashboard', function (req, res) {
+   var query = 'SELECT u.username,s.AnswerCount,s.date_attempted as timestamp,s.question1_response,s.question2_response,';
+   query+= 's.question3_response from UserList u join SurveyResponse s on u.userid=s.userid order by s.date_attempted desc';
+	// console.log(query);
+
+	connection.query(query, function(err, rows) {
+		if (err) throw err;
+	   res.render( __dirname + "/" + "admin_dashboard.ejs",{username:username, userResponse:rows});
+	});
+})
+
+//customer_result.ejs - the redirection page for the customer
+app.get('/customer_result', function (req, res) {
+	// res.set('Content-Type', 'application/javascript');
+   	res.render( __dirname + "/" + "customer_result.ejs",{
+   		count: count,
+   		username: username,
+   		userSurveyResult1:userSurveyResult1,
+   		userSurveyResult2:userSurveyResult2,
+   		userSurveyResult3:userSurveyResult3
+   	});
+})
+
+app.get('/index_post', urlencodedParser, function (req, res) {
+
+	//Get the netered credentials and checking them with DB
+	//Providing access based on user type
+	username = req.param('username');
+	var password = req.param('password');
+	
+	var query = 'SELECT * FROM UserList WHERE username = "'+username+'" and password = "'+password+'"';
+	// console.log(query);
+	connection.query(query, function(err, rows) {
+		if (err) throw err;
+		else{
+			if(rows.length > 0)
+				userid=rows[0].userid;
+			res.send({rows:rows});
+			res.end();
+		}
+		//to redirect based on user authentication
+		// if(rows.length>0 && rows[0].type=="customer") {
+		// 	userid = rows[0].userid;	
+		// 	authData="";
+		// 	res.redirect('/customer_survey');
+		// }
+		// else if(rows.length>0 && rows[0].type=="admin") {
+		// 	userid = rows[0].userid;
+		// 	authData="";
+		// 	res.redirect('/admin_dashboard');
+		// }
+		// else {
+		// 	authData="Invalid username or password";
+		// 	res.redirect('/index.htm');
+		// }
+	});
+	// res.end();
+});
+app.post('/survey_post', urlencodedParser, function (req, res) {
+
+	//Get the netered credentials and checking them with DB
+	//Providing access based on user type
+	count = 0;
+    /*userid = 0;
+	var query ="SELECT * from UserList where username='"+username+"'";
+	console.log(query);
+	connection.query(query, function(err, rows) {
+		if (err) {
+			console.log("err111");
+			throw err;
+		}
+		else{
+			userid = rows[0].userid;
+		}});*/
+	console.log("---"+userid);
+	var element1 = req.body.element_1;
+	var element2 = req.body.element_2;
+	var element3 = req.body.element_3;
+	//Question1
+	if(element1==1) {
+		count++;
+		element1+=' - Correct';
+	}
+	else
+		element1+=' - Wrong';
+	//Question2
+	if(element2==1) {
+		count++;
+		element2+=' - Correct';
+	}
+	else
+		element2+=' - Wrong';
+	//Question3
+	if(element3==3) {
+		count++;
+		element3+=' - Correct';
+	}
+	else
+		element3+=' - Wrong';
+
+	userSurveyResult1 = "Question1: Option"+element1;
+	userSurveyResult2 = "Question2: Option"+element2;
+	userSurveyResult3 = "Question3: Option"+element3;
+
+	var query = 'INSERT INTO SurveyResponse(userid,AnswerCount,question1_response,question2_response,question3_response)'
+	query+=' values('+userid+','+count+',"'+element1+'","'+element2+'","'+element3+'")';
+	console.log(query);
+	connection.query(query, function(err, rows) {
+		if (err) {
+			console.log("errrrrrr!!---");
+			throw err;
+		}
+	});
+	res.redirect('/customer_result');
+});
+
+app.post('/logout', urlencodedParser, function (req, res) {
+	res.redirect('/index.htm');
+});
+
+//handling Error page
+// app.use(app.router);
+app.use(function(req, res, next){
+  res.render('404', { status: 404, url: req.url });
+});
+app.use(function(err, req, res, next){
+  // we may use properties of the error object
+  // here and next(err) appropriately, or if
+  // we possibly recovered from the error, simply next().
+  res.render('500', {
+      status: err.status || 500
+    , error: err
+  });
+});
+//setting up server and making it to listen on port 8081
+var server = app.listen(8081, function () {
+	var host = server.address().address;
+	var port = server.address().port;
+	console.log("Example app listening at http://%s:%s", host, port)
+});

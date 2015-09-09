@@ -1,0 +1,66 @@
+<html>
+<style type="text/css">
+table,tr,td {
+	border: 1px solid black;
+}	
+.data {
+	text-align: center;
+}
+.heading {
+	font-weight: bold;
+	text-align: center;
+}
+.title {
+	text-align: center;
+}
+.logoutButton {
+	text-align:center
+}
+.logoutLblPos{
+
+   position:fixed;
+   right:10px;
+   top:5px;
+}
+</style>
+<script type = "text/javascript" >
+    history.pushState(null, null, 'admin_dashboard.ejs');
+    window.addEventListener('popstate', function(event) {
+    history.pushState(null, null, 'admin_dashboard.ejs');
+    });
+</script>
+<body>
+<div class="title">
+<h1>Admin Dashboard</h1>
+<h3> Hey <%=username%>, here are the user responses!</h3>
+</div>
+<table class="border" align="center" width = "100%">
+<tr class="border">
+	<td class="heading"> Username </td>
+	<td class="heading"> Question1 </td>
+	<td class="heading"> Question2 </td>
+	<td class="heading"> Question3 </td>
+	<td class="heading"> AnswerCount </td>
+	<td class="heading"> Timestamp </td>
+</tr>
+<%for(var i=0;i<userResponse.length;i++){%>
+	<tr>
+		<td class="data"><%=userResponse[i].username%></td>
+		<td class="data"><%=userResponse[i].question1_response%></td>
+		<td class="data"><%=userResponse[i].question2_response%></td>
+		<td class="data"><%=userResponse[i].question3_response%></td>
+		<td class="data"><%=userResponse[i].AnswerCount%></td>
+		<td class="data"><%=userResponse[i].timestamp%></td>
+		<%}%>
+	</tr>
+</table>
+<!-- <br/><div class="logoutButton">
+<button type="button">Logout</button>
+</div> -->
+<form align="right" name="form1" method="post" action="logout">
+	<div class="logoutLblPos">
+		<input name="submit2" type="submit" id="submit2" value="Logout">
+	</div>
+</form>
+</body>
+</html> 

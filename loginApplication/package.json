@@ -1,0 +1,23 @@
+{
+  "name": "loginApplication",
+  "version": "0.0.1",
+  "description": "loginApplication is an application to test the understanding of nodeJS, ExpressJS and mySQL",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "node",
+    "MySQl",
+    "EDISS"
+  ],
+  "author": "Jayakumaur Ravisankar",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "express": "~4.13.3",
+    "body-parser": "~1.13.3",
+    "cookie-parser": "~1.3.5",
+    "multer": "~1.0.3"
+  }
+}

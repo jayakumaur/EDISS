@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Untitled Form</title>
+<link rel="stylesheet" type="text/css" href="view.css" media="all">
+<!-- <script src="view.js"></script> -->
+<script type = "text/javascript" >
+    history.pushState(null, null, 'index.htm');
+    window.addEventListener('popstate', function(event) {
+    history.pushState(null, null, 'index.htm');
+    });
+</script>
+<style type="text/css">
+/*.logoutLblPos{
+   position:fixed;
+   right:10px;
+   top:5px;
+}*/
+</style>
+</head>
+<body id="main_body" >
+	<div id="form_container">
+		<center>
+		<form id="form_1049405" class="appnitro"  method="post" action="survey_post">
+			<h1>Customer Survey</h1>
+			<h3>Hey <%=username%>, provide your responses to the questions below</h3>				
+					
+			<li>
+				<label class="description" for="element_1">What is the value of 3*4? </label> <p/>
+				<span>
+					<input id="element_1_1" name="element_1" class="element radio" type="radio" checked="checked" value="1" />
+						<label class="choice" for="element_1_1">12</label>
+					<input id="element_1_2" name="element_1" class="element radio" type="radio" value="2" />
+						<label class="choice" for="element_1_2">34</label>
+					<input id="element_1_3" name="element_1" class="element radio" type="radio" value="3" />
+						<label class="choice" for="element_1_3">-1</label>
+				</span> 
+			</li>
+			<li>
+				<label class="description" for="element_2">What is the value of 2+2? </label> <p/>
+				<span>
+					<input id="element_2_1" name="element_2" class="element radio" type="radio" checked="checked" value="1" />
+						<label class="choice" for="element_2_1">4</label>
+					<input id="element_2_2" name="element_2" class="element radio" type="radio" value="2" />
+						<label class="choice" for="element_2_2">-2</label>
+					<input id="element_2_3" name="element_2" class="element radio" type="radio" value="3" />
+						<label class="choice" for="element_2_3">0</label>
+				</span> 
+			</li>
+			<li>
+				<label class="description" for="element_3">What is the value of 2/2? </label> <p/>
+				<span>
+					<input id="element_3_1" name="element_3" class="element radio" type="radio" checked="checked"value="1" />
+						<label class="choice" for="element_1_1">3</label>
+					<input id="element_3_2" name="element_3" class="element radio" type="radio" value="2" />
+						<label class="choice" for="element_1_2">4</label>
+					<input id="element_3_3" name="element_3" class="element radio" type="radio" value="3" />
+						<label class="choice" for="element_1_3">1</label>
+				</span> 
+			</li>
+			<input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" />
+			
+		</form>
+		<br/>
+		<form align="center" name="form1" method="post" action="logout">
+			<div class="logoutLblPos">
+				<input name="submit2" type="submit" id="submit2" value="Logout">
+			</div>
+		</form>
+		</center>
+	</div>
+</body>
+</html>

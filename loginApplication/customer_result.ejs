@@ -1,0 +1,31 @@
+<html>
+<script type = "text/javascript" >
+    history.pushState(null, null, 'index.htm');
+    window.addEventListener('popstate', function(event) {
+    history.pushState(null, null, 'index.htm');
+    });
+</script>
+<body>
+<style type="text/css">
+/*.logoutLblPos{
+
+   position:fixed;
+   right:10px;
+   top:5px;
+}*/
+</style>
+<center>
+<h1>Survey Results !</h1> 
+<h3> Hey <%=username%>, You got <%=count %> answers right! </h3>
+<%=userSurveyResult1%><br/>
+<%=userSurveyResult2%><br/>
+<%=userSurveyResult3%><br/>
+<br/>
+<form align="center" name="form1" method="post" action="logout">
+	<div class="logoutLblPos">
+		<input name="submit2" type="submit" id="submit2" value="Logout">
+	</div>
+</form>
+</center>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<html>
+<script type = "text/javascript" >
+    history.pushState(null, null, 'index.htm');
+    window.addEventListener('popstate', function(event) {
+    history.pushState(null, null, 'index.htm');
+    });
+</script>
+<body>
+<form action="http://127.0.0.1:8081/index_post" method="POST">
+<div align="center" id="myinnercontainer">
+		<div> Username: <input type="text" name="username"/> </div><p/>
+		<div> Password: <input type="password" type="text" name="password"/> </div><p/>
+		<div> <input align="center" type="submit" value="Submit"/> </div>
+</div>
+</form>
+</body>
+<style type="text/css">
+	#myoutercontainer { /*position:relative*/ }
+	#myoutercontainer2 { line-height:4em }
+	#myinnercontainer { position:absolute; top:50%; height:10em; margin-top:-5em }
+</style>
+</html>
